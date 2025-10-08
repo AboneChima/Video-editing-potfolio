@@ -3,6 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Play, Download, ExternalLink, Loader2, ChevronUp, MessageCircle, Send } from 'lucide-react'
 import './App.css'
 
+// Import logo images
+import capcutLogo from './assets/img/capcut logo.jpeg'
+import alightMotionLogo from './assets/img/alight morion.jpeg'
+
+// Import video files
+import businessEditVideo from './assets/Portfolio/Business edit.mp4'
+import brandVisualVideo from './assets/Portfolio/Brand Visual.mp4'
+import musicVideoFile from './assets/Portfolio/Music video.mp4'
+import tiktokStyleVideo from './assets/Portfolio/Tiktok Style.mp4'
+import productVisualVideo from './assets/Portfolio/Product visual.mp4'
+import techVisualVideo from './assets/Portfolio/Tech Visual.mp4'
+
 // Software Logo Component
 const SoftwareLogo = ({ src, alt, className = "software-logo" }) => (
   <img 
@@ -105,7 +117,7 @@ const tools = [
     name: 'CapCut',
     category: 'Mobile Video Editing',
     description: 'Professional mobile video editing with advanced features',
-    logo: <SoftwareLogo src="/src/assets/img/capcut logo.jpeg" alt="CapCut" />,
+    logo: <SoftwareLogo src={capcutLogo} alt="CapCut" />,
     color: 'var(--apple-red)'
   },
   {
@@ -119,7 +131,7 @@ const tools = [
     name: 'Alight Motion',
     category: 'Mobile Animation',
     description: 'Professional animation and motion graphics on mobile',
-    logo: <SoftwareLogo src="/src/assets/img/alight morion.jpeg" alt="Alight Motion" />,
+    logo: <SoftwareLogo src={alightMotionLogo} alt="Alight Motion" />,
     color: 'var(--apple-orange)'
   },
   {
@@ -154,7 +166,7 @@ const projects = [
     tools: ['After Effects', 'DaVinci Resolve'],
     year: '2024',
     client: 'Envato',
-    videoSrc: '/src/assets/Portfolio/Business edit.mp4'
+    videoSrc: businessEditVideo
   },
   {
     title: 'Brand Visual: Creative Growth',
@@ -164,7 +176,7 @@ const projects = [
     tools: ['Filmora', 'After Effects', 'Photoshop'],
     year: '2024',
     client: 'WebDek (Web Design Agency)',
-    videoSrc: '/src/assets/Portfolio/Brand Visual.mp4'
+    videoSrc: brandVisualVideo
   },
   {
     title: 'Music Video: Rhythmic Motion',
@@ -174,7 +186,7 @@ const projects = [
     tools: ['Alight Motion', 'After Effects', 'Photoshop'],
     year: '2024',
     client: 'Recording Artist',
-    videoSrc: '/src/assets/Portfolio/Music video.mp4'
+    videoSrc: musicVideoFile
   },
   {
     title: 'TikTok Style: The Nigerian Edit',
@@ -184,7 +196,7 @@ const projects = [
     tools: ['After Effects'],
     year: '2024',
     client: 'Personal Project',
-    videoSrc: '/src/assets/Portfolio/Tiktok Style.mp4'
+    videoSrc: tiktokStyleVideo
   },
   {
     title: 'Product Visual: Apple AirPods Promo',
@@ -194,7 +206,7 @@ const projects = [
     tools: ['After Effects', 'Photoshop'],
     year: '2024',
     client: 'Product Ad Project',
-    videoSrc: '/src/assets/Portfolio/Product visual.mp4'
+    videoSrc: productVisualVideo
   },
   {
     title: 'Tech Visual: Wallet Connection (Web3 Concept)',
@@ -204,7 +216,7 @@ const projects = [
     tools: ['After Effects', 'DaVinci Resolve'],
     year: '2024',
     client: 'FinTech Concept',
-    videoSrc: '/src/assets/Portfolio/Tech Visual.mp4'
+    videoSrc: techVisualVideo
   }
 ]
 
