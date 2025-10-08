@@ -14,6 +14,7 @@ import musicVideoFile from './assets/Portfolio/Music video.mp4'
 import tiktokStyleVideo from './assets/Portfolio/Tiktok Style.mp4'
 import productVisualVideo from './assets/Portfolio/Product visual.mp4'
 import techVisualVideo from './assets/Portfolio/Tech Visual.mp4'
+import socialIconsVideo from './assets/Videos/social icons.mp4'
 
 // Software Logo Component
 const SoftwareLogo = ({ src, alt, className = "software-logo" }) => (
@@ -1606,7 +1607,7 @@ function App() {
                       playsInline
                       className="contact-video-player"
                     >
-                      <source src="/src/assets/Videos/social icons.mp4" type="video/mp4" />
+                      <source src={socialIconsVideo} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   </div>
