@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Play, Download, ExternalLink, Loader2 } from 'lucide-react'
+import { Menu, X, Play, Download, ExternalLink, Loader2, ChevronUp, MessageCircle, Send } from 'lucide-react'
 import './App.css'
 
 // Software Logo Component
@@ -217,6 +217,18 @@ function App() {
   const [videoModalProject, setVideoModalProject] = useState(null)
   const [formStatus, setFormStatus] = useState('') // '', 'submitting', 'success', 'error'
   const [formMessage, setFormMessage] = useState('')
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const [showScrollTop, setShowScrollTop] = useState(false)
+  const [isChatOpen, setIsChatOpen] = useState(false)
+  const [chatMessages, setChatMessages] = useState([
+    {
+      id: 1,
+      type: 'bot',
+      content: 'Hi! I\'m Oracle AI, your video editing assistant. How can I help you today?'
+    }
+  ])
+  const [chatInput, setChatInput] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
 
   // Form submission handler
   const handleFormSubmit = async (e) => {
@@ -259,7 +271,19 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      setScrollY(currentScrollY)
+      
+      // Calculate scroll progress
+      const documentHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = (currentScrollY / documentHeight) * 100
+      setScrollProgress(Math.min(progress, 100))
+      
+      // Show/hide scroll to top button
+      setShowScrollTop(currentScrollY > 300)
+    }
+    
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
@@ -285,9 +309,206 @@ function App() {
     setIsMenuOpen(false)
   }
 
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  // Chat functions
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen)
+  }
+
+  const sendMessage = async () => {
+    if (!chatInput.trim()) return
+
+    const userMessage = {
+      id: Date.now(),
+      type: 'user',
+      content: chatInput.trim()
+    }
+
+    setChatMessages(prev => [...prev, userMessage])
+    setChatInput('')
+    setIsTyping(true)
+
+    // Simulate AI response
+    setTimeout(() => {
+      const botResponse = getBotResponse(userMessage.content)
+      setChatMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        type: 'bot',
+        content: botResponse
+      }])
+      setIsTyping(false)
+    }, 1500)
+  }
+
+  const getBotResponse = (userInput) => {
+    const input = userInput.toLowerCase()
+    
+    if (input.includes('price') || input.includes('cost') || input.includes('rate')) {
+      return 'Our video editing services start from $50 for basic edits. For complex projects with motion graphics and color grading, prices range from $150-$500. Would you like a custom quote for your project?'
+    }
+    
+    if (input.includes('portfolio') || input.includes('work') || input.includes('example')) {
+      return 'You can check out my portfolio above! I specialize in business videos, social media content, and creative edits using CapCut, After Effects, and DaVinci Resolve. Each project showcases different techniques and styles.'
+    }
+    
+    if (input.includes('time') || input.includes('delivery') || input.includes('how long')) {
+      return 'Typical turnaround time is 3-7 business days depending on project complexity. Rush orders (24-48 hours) are available for an additional fee. I always deliver high-quality work on time!'
+    }
+    
+    if (input.includes('software') || input.includes('tools') || input.includes('program')) {
+      return 'I work with professional tools including CapCut for mobile editing, After Effects for motion graphics, DaVinci Resolve for color grading, Alight Motion for animations, and Photoshop for graphics. What type of project do you have in mind?'
+    }
+    
+    if (input.includes('contact') || input.includes('hire') || input.includes('project')) {
+      return 'I\'d love to work on your project! You can reach me through the contact form above, or connect with me on social media. Let\'s discuss your vision and bring it to life!'
+    }
+    
+    if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+      return 'Hello! Welcome to Oracle Studios. I\'m here to help you with any questions about video editing services, pricing, or my portfolio. What would you like to know?'
+    }
+    
+    return 'Thanks for your message! I specialize in professional video editing with quick turnaround times. Feel free to ask about my services, pricing, portfolio, or anything else. You can also use the contact form above to get in touch directly!'
+  }
+
+  const handleChatKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      sendMessage()
+    }
+  }
+
   return (
     <>
       <LoadingScreen isLoading={isLoading} />
+      
+      {/* Scroll Progress Indicator */}
+      <div className="scroll-progress">
+        <motion.div 
+          className="scroll-progress-bar"
+          style={{ width: `${scrollProgress}%` }}
+          initial={{ width: 0 }}
+          animate={{ width: `${scrollProgress}%` }}
+          transition={{ duration: 0.1, ease: "easeOut" }}
+        />
+      </div>
+
+      {/* Scroll to Top Button */}
+      <motion.button
+        className={`scroll-to-top ${showScrollTop ? 'visible' : ''}`}
+        onClick={scrollToTop}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ 
+          opacity: showScrollTop ? 1 : 0,
+          y: showScrollTop ? 0 : 20,
+          visibility: showScrollTop ? 'visible' : 'hidden'
+        }}
+        transition={{ duration: 0.3 }}
+        whileHover={{ scale: 1.1, y: -2 }}
+        whileTap={{ scale: 0.9 }}
+      >
+        <ChevronUp />
+      </motion.button>
+
+      {/* AI Chat Assistant */}
+      <div className="chat-assistant">
+        <motion.button
+          className={`chat-toggle ${isChatOpen ? 'open' : ''}`}
+          onClick={toggleChat}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 2.5, type: "spring", stiffness: 200 }}
+        >
+          {isChatOpen ? <X /> : <MessageCircle />}
+        </motion.button>
+
+        <motion.div
+          className={`chat-window ${isChatOpen ? 'open' : ''}`}
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ 
+            opacity: isChatOpen ? 1 : 0,
+            y: isChatOpen ? 0 : 20,
+            scale: isChatOpen ? 1 : 0.95,
+            visibility: isChatOpen ? 'visible' : 'hidden'
+          }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          <div className="chat-header">
+            <div className="chat-avatar">AI</div>
+            <div className="chat-info">
+              <h3>Oracle AI Assistant</h3>
+              <p>Video editing expert</p>
+            </div>
+          </div>
+
+          <div className="chat-messages">
+            {chatMessages.map((message) => (
+              <motion.div
+                key={message.id}
+                className={`chat-message ${message.type}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className={`message-avatar ${message.type}`}>
+                  {message.type === 'bot' ? 'AI' : 'U'}
+                </div>
+                <div className="message-content">
+                  {message.content}
+                </div>
+              </motion.div>
+            ))}
+            
+            {isTyping && (
+              <motion.div
+                className="chat-message bot"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                <div className="message-avatar bot">AI</div>
+                <div className="typing-indicator">
+                  <div className="typing-dots">
+                    <div className="typing-dot"></div>
+                    <div className="typing-dot"></div>
+                    <div className="typing-dot"></div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
+
+          <div className="chat-input-container">
+            <div className="chat-input-wrapper">
+              <input
+                type="text"
+                className="chat-input"
+                placeholder="Ask about video editing services..."
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyPress={handleChatKeyPress}
+              />
+              <motion.button
+                className="chat-send-btn"
+                onClick={sendMessage}
+                disabled={!chatInput.trim()}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Send />
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
       
       <div className="app">
 
@@ -1079,7 +1300,8 @@ function App() {
                         onClick={() => setVideoModalProject(project)}
                       >
                         <Play size={16} />
-                        Play Video
+                        <span className="btn-text-desktop">Play Video</span>
+                        <span className="btn-text-mobile">Play</span>
                       </button>
                       <button 
                         className="btn btn-secondary"
